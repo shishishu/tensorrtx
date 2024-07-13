@@ -12,8 +12,8 @@ include_directories(/usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 
 # tensorrt
-include_directories(/data/docker/zhouxiangjun/resources/TensorRT-7.0.0.11/include)
-link_directories(/data/docker/zhouxiangjun/resources/TensorRT-7.0.0.11/lib)
+include_directories(absolute path to TensorRT-7.0.0.11/include)
+link_directories(absolute path to TensorRT-7.0.0.11/lib)
 
 # create link for executable files
 add_executable(mlp mlp.cpp)
