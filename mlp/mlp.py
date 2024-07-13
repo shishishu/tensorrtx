@@ -244,5 +244,5 @@ if __name__ == "__main__":
         print("[INFO]: Successfully created TensorRT engine...")
         print("\n\tRun inference using `python mlp.py -d`\n")
     else:
-        perform_inference(input_val=4.0)
+        perform_inference(input_val=12.0)
 

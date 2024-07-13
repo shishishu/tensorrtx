@@ -4,6 +4,8 @@
 #include <map>          // for weight maps
 #include <fstream>      // for file-handling
 #include <chrono>       // for timing the execution
+#include <cuda_runtime_api.h>
+#include <cuda.h>
 
 // provided by nvidia for using TensorRT APIs
 using namespace nvinfer1;
