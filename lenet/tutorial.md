@@ -12,7 +12,7 @@ python lenet.py -s 2>verbose.log
 ```
 ![verbose](verbose.jpg)
 
-## learn optimizations to the graph for inference
+## Learn optimizations to the graph for inference
 ### result
 ```
 [TensorRT] VERBOSE: After reformat layers: 7 layers
@@ -107,4 +107,56 @@ Chose Runner Type and Tactic: 最后，TensorRT 选择了 CudaFullyConnected 作
 - **CudaMLP**: TensorRT 选择了这种策略，并记录了策略 0 的执行时间为 0.017696 秒。
 
 总结来说，TensorRT 在自动调优过程中尝试了不同的策略，并最终选择了执行时间最短的策略来优化模型的推理性能。在这个例子中，由于临时存储空间的限制，某些策略被跳过，最终选择了 `CudaMLP` 策略。这对于在实际应用中实现快速、高效的深度学习推理是非常关键的。
+```
+
+## Extensions
+Torch-TensorRT: https://pytorch.org/TensorRT/_notebooks/lenet-getting-started.html
+```Python
+import torch_tensorrt
+
+trt_script_module = torch_tensorrt.compile(script_model, inputs = [torch_tensorrt.Input(
+            min_shape=[1024, 1, 32, 32],
+            opt_shape=[1024, 1, 33, 33],
+            max_shape=[1024, 1, 34, 34],
+            dtype=torch.half
+            )],
+            enabled_precisions={torch.half})
+
+input_data = torch.randn((1024, 1, 32, 32))
+input_data = input_data.half().to("cuda")
+
+input_data = input_data.half()
+result = trt_script_module(input_data)
+torch.jit.save(trt_script_module, "trt_script_module.ts")
+```
+
+TensorFlow-TensorRT: https://docs.nvidia.com/deeplearning/frameworks/tf-trt-user-guide/index.html
+```Python
+# Convert the model using the TF-TRT converter
+from tensorflow.python.compiler.tensorrt import trt_convert as trt
+ 
+# Instantiate the TF-TRT converter
+converter = trt.TrtGraphConverterV2(
+   input_saved_model_dir=SAVED_MODEL_DIR,
+   precision_mode=trt.TrtPrecisionMode.FP32
+)
+ 
+# Convert the model into TRT compatible segments
+trt_func = converter.convert()
+converter.summary()
+
+
+# Build the TRT engines
+MAX_BATCH_SIZE=128
+def input_fn():
+   batch_size = MAX_BATCH_SIZE
+   x = x_test[0:batch_size, :]
+   yield [x]
+ 
+converter.build(input_fn=input_fn)
+
+
+# Save the converted model for future use
+OUTPUT_SAVED_MODEL_DIR="./models/tftrt_saved_model"
+converter.save(output_saved_model_dir=OUTPUT_SAVED_MODEL_DIR) 
 ```
