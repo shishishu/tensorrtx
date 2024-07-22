@@ -89,24 +89,25 @@ Chose Runner Type and Tactic: 最后，TensorRT 选择了 CudaFullyConnected 作
 [TensorRT] VERBOSE: >>>>>>>>>>>>>>> Chose Runner Type: CudaMLP Tactic: 0
 ```
 ```
-[kimi] 这段日志同样来自 NVIDIA 的 TensorRT，描述了在自动调优过程中的一些细节。以下是对日志内容的逐条解释：
+[kimi] 这段日志同样来自 NVIDIA 的 TensorRT，描述了在自动调优过程中的一些细节。
 
-1. **Autotuning format combination**: TensorRT 正在自动调优数据格式的组合。这次的目标是将输入格式 `Float(1,1,1,120)` 转换为输出格式 `Float(1,1,1,10)`。
+以下是对日志内容的逐条解释：
 
-2. **Timing Runner**: TensorRT 正在测量不同策略（tactics）的执行时间。这里涉及到的是一个两层的多层感知机（MLP），包括一个全连接层（Fully Connected Layer）和一个激活层（Activation Layer），然后是另一个全连接层。
+Autotuning format combination: TensorRT 正在自动调优数据格式的组合。这次的目标是将输入格式 Float(1,1,1,120) 转换为输出格式 Float(1,1,1,10)。
 
-3. **Tactic Skipped**: 在某些情况下，TensorRT 会跳过某些策略。这通常发生在所需的临时存储空间（scratch space）不足时。例如，日志中提到 "Scratch requested: 672, available: 0"，意味着所需的 672 字节的临时存储空间不可用。
+Timing Runner: TensorRT 正在测量不同策略（tactics）的执行时间。这里涉及到的是一个两层的多层感知机（MLP），包括一个全连接层（Fully Connected Layer）和一个激活层（Activation Layer），然后是另一个全连接层。
 
-4. **Fastest Tactic**: 当所有策略都被跳过时，TensorRT 会记录一个非常大的执行时间，如 `3.40282e+38`，这表示没有有效的策略被执行。
+Tactic Skipped: 在某些情况下，TensorRT 会跳过某些策略。这通常发生在所需的临时存储空间（scratch space）不足时。例如，日志中提到 "Scratch requested: 672, available: 0"，意味着所需的 672 字节的临时存储空间不可用。
 
-5. **Chose Runner Type and Tactic**: 最后，TensorRT 选择了 `CudaMLP` 作为运行类型，并选择了策略 0，其执行时间为 0.017696 秒。这表示在所有尝试的策略中，这是一个最优的选择。
+Fastest Tactic: 当所有策略都被跳过时，TensorRT 会记录一个非常大的执行时间，如 3.40282e+38，这表示没有有效的策略被执行。
+
+Chose Runner Type and Tactic: 最后，TensorRT 选择了 CudaMLP 作为运行类型，并选择了策略 0，其执行时间为 0.017696 秒。这表示在所有尝试的策略中，这是一个最优的选择。
 
 具体来说，日志中的几部分内容如下：
 
-- **CudnnMLPFC** 和 **CudnnMLPMM**: 这两种策略都因为所需的临时存储空间不足而被跳过。
-- **CudaMLP**: TensorRT 选择了这种策略，并记录了策略 0 的执行时间为 0.017696 秒。
-
-总结来说，TensorRT 在自动调优过程中尝试了不同的策略，并最终选择了执行时间最短的策略来优化模型的推理性能。在这个例子中，由于临时存储空间的限制，某些策略被跳过，最终选择了 `CudaMLP` 策略。这对于在实际应用中实现快速、高效的深度学习推理是非常关键的。
+CudnnMLPFC 和 CudnnMLPMM: 这两种策略都因为所需的临时存储空间不足而被跳过。
+CudaMLP: TensorRT 选择了这种策略，并记录了策略 0 的执行时间为 0.017696 秒。
+总结来说，TensorRT 在自动调优过程中尝试了不同的策略，并最终选择了执行时间最短的策略来优化模型的推理性能。在这个例子中，由于临时存储空间的限制，某些策略被跳过，最终选择了 CudaMLP 策略。这对于在实际应用中实现快速、高效的深度学习推理是非常关键的。
 ```
 
 ## Extensions
